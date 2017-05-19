@@ -22,35 +22,61 @@ void setup(){
   movie1.play();
   movie2.play();
   
+  movie1.volume(0);
   movie2.volume(0);
   
 }
 
 void draw(){
+  
+  clear();
+  
   if(movie1.available()){
    movie1.read(); 
   }
   if(movie2.available()){
     movie2.read();
   }
-  //scale up the image, resize doesnt work for a reason to enlarge the image
-  PImage current = movie1;
-  PImage result = createImage(imageWidth2, imageHeight2, RGB);
-  result.copy(movie1, 0, 0, imageWidth2, imageHeight2, 0, 0, imageWidth2, imageHeight2);
+
   
-  result.set(0, 0, movie2.get(0,0,currentLineWipeTransition,imageHeight2));
+  //scale up the image, resize doesnt work for a reason to enlarge the image
+  PImage movie1Upscale = createImage(imageWidth2, imageHeight2, RGB);
+  movie1Upscale.copy(movie1, 0, 0, imageWidth2, imageHeight2, 0, 0, imageWidth2, imageHeight2);
+  
+  image(movie1Upscale,0,0);
+    
+  //make a transition after 2 seconds
+  if((int)movie1.time() >= 2){
+    wipe(movie1Upscale, movie2);
+  //  fade(movie1Upscale, movie2);
+  }
+  
+  /*
+  movie1Upscale.set(0, 0, movie2.get(0,0,currentLineWipeTransition,imageHeight2));
   currentLineWipeTransition += speedWipeTransition;
   
   PImage movie2Copy = createImage(imageWidth2, imageHeight2, RGB);
-  movie2Copy.copy(movie2,0,0,imageWidth2, imageHeight2, 0, 0, imageWidth2, imageHeight2);
+  movie2Copy.copy(movie2,0,0,imageWidth2, imageHeight2, 0, 0, imageWidth2, imageHeight2); */
   
-  image(result,0,0);
+  
+  /*
+  image(movie1Upscale,0,0);
   tint(255,122);
   image(movie2Copy,0,0);
   tint(255,50);
-
-  wipe(movie1, movie2);
+*/
   
+
+  //wipe(movie1, movie2);
+  //fade(movie1Upscale, movie2);
+  /*
+  tint(255,122);
+  image(movie1Upscale,0,0);
+  //tint(255,122);
+  */
+  //tint(255,123);
+  //image(movie2, 0,0);
+
   
   //current.resize(400,0);
   //current.resize(960,0);
@@ -65,12 +91,19 @@ void draw(){
   //image(current,0,0);
 }
 
-PImage wipe(PImage movie1, PImage movie2){
+void wipe(PImage movie1, PImage movie2){
   PImage result = createImage(imageWidth2, imageHeight2, RGB);
   //result.copy(movie1, 0, 0, currentLineWipeTransition, imageHeight2, 0, 0, currentLineWipeTransition, imageHeight2);
-  result.copy(movie1, 0, 0, currentLineWipeTransition, imageHeight2, 0, 0, currentLineWipeTransition, imageHeight2);
+  result.set(0, 0, movie2.get(0,0,currentLineWipeTransition,imageHeight2));
   currentLineWipeTransition += speedWipeTransition;
-  result.resize(imageWidth2, imageHeight2);
-  image(result ,0 ,0);
-  return result;
+  
+  image(result,0,0);
+}
+
+void fade(PImage movie1, PImage movie2){
+  
+  tint(255,20);
+  image(movie2,0,0);
+  //tint(255,20);
+  
 }
