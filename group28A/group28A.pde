@@ -3,6 +3,8 @@ import processing.video.*;
 int currentLineWipeTransition = 0;
 int speedWipeTransition = 4;
 
+int speedFadeTransition = 4;
+
 Movie movie1;
 Movie movie2;
 
@@ -36,10 +38,18 @@ void draw(){
   PImage result = createImage(imageWidth2, imageHeight2, RGB);
   result.copy(movie1, 0, 0, imageWidth2, imageHeight2, 0, 0, imageWidth2, imageHeight2);
   
-  result.set(0, 200, movie2.get(0,50,200,200));
+  result.set(0, 0, movie2.get(0,0,currentLineWipeTransition,imageHeight2));
+  currentLineWipeTransition += speedWipeTransition;
+  
+  PImage movie2Copy = createImage(imageWidth2, imageHeight2, RGB);
+  movie2Copy.copy(movie2,0,0,imageWidth2, imageHeight2, 0, 0, imageWidth2, imageHeight2);
   
   image(result,0,0);
-  
+  tint(255,122);
+  image(movie2Copy,0,0);
+  tint(255,50);
+
+  wipe(movie1, movie2);
   
   
   //current.resize(400,0);
@@ -54,14 +64,13 @@ void draw(){
   //}
   //image(current,0,0);
 }
-/*
+
 PImage wipe(PImage movie1, PImage movie2){
   PImage result = createImage(imageWidth2, imageHeight2, RGB);
   //result.copy(movie1, 0, 0, currentLineWipeTransition, imageHeight2, 0, 0, currentLineWipeTransition, imageHeight2);
   result.copy(movie1, 0, 0, currentLineWipeTransition, imageHeight2, 0, 0, currentLineWipeTransition, imageHeight2);
   currentLineWipeTransition += speedWipeTransition;
   result.resize(imageWidth2, imageHeight2);
-  
+  image(result ,0 ,0);
   return result;
 }
-*/
