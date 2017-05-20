@@ -4,6 +4,7 @@ int currentLineWipeTransition = 0;
 int speedWipeTransition = 4;
 
 int currentFadeTransition = 0;
+int currentDissolveTransition = 0;
 int speedFadeTransition = 1;
 
 Movie movie1;
@@ -17,7 +18,7 @@ void setup(){
   size(960,540);
   movie1 = new Movie(this, "PCMLab11-1.mov");
   movie2 = new Movie(this, "PCMLab11-2.mov");
-  sky = loadImage ("sky.jpg);
+  sky = loadImage ("sky.jpg");
   
   movie1.loop();
   movie2.loop();
@@ -45,13 +46,13 @@ void draw(){
   
   chromaKey(movie2);
   
-  //image(movie1Upscale,0,0);
-  image(movie2,0,0);
-    
+  image(movie1Upscale,0,0);
+  //image(movie2,0,0);
+  
   //make a transition after 2 seconds
   if((int)movie1.time() >= 2){
     //wipe(movie1Upscale, movie2);
-    //fade(movie1Upscale, movie2);
+    fade(movie1Upscale, movie2);
     //dissolve(movie1Upscale, movie2);
   }
   
@@ -66,21 +67,22 @@ void wipe(PImage movie1, PImage movie2){
   image(result,0,0);
 }
 
-void fade(PImage movie1, PImage movie2){
-  
+void fade(PImage movie1){ 
   image(movie1,0,0);
-  tint(255,0 + currentFadeTransition);
-  
-  image(movie2,0,0);
-  tint(255, 255 - currentFadeTransition);
-  
-  currentFadeTransition += speedFadeTransition; 
+  tint(255,255 - currentFadeTransition);
+ 
+  if(currentFadeTransition < 255)
+    currentFadeTransition += speedFadeTransition; 
 }
 
 void dissolve(PImage movie1, PImage movie2){
+  image(movie1,0,0);
+  tint(255,0 + currentDissolveTransition);
   
-
-
+  image(movie2,0,0);
+  tint(255, 255 - currentDissolveTransition);
+  
+  currentDissolveTransition += speedFadeTransition; 
 }
 
 void chromaKey(PImage m){
@@ -91,9 +93,9 @@ void chromaKey(PImage m){
       float r = red(m.pixels[aux]);
       float g = green(m.pixels[aux]);
       float b = blue(m.pixels[aux]);
-      if((r < 200 && g > 200 && b < 200))
+      if((r < 210 && g > 200 && b < 255))
       {
-        m.pixels[aux] = color(0, 0, 0);
+        m.pixels[aux] = sky.pixels[aux];
       }
     }
   }
