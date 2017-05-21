@@ -5,7 +5,10 @@ int speedWipeTransition = 4;
 
 int currentFadeTransition = 0;
 int currentDissolveTransition = 0;
-int speedFadeTransition = 1;
+int speedFadeTransition = 2;
+
+int xCoord = 0;
+int yCoord = 0;
 
 Movie movie1;
 Movie movie2;
@@ -38,6 +41,35 @@ void draw(){
   if(movie2.available()){
     movie2.read();
   }
+  
+  if (keyPressed) {
+    if (key == 'a' || key == 'A') {
+      if(xCoord - 25 > 0)
+        xCoord -= 25;
+      else
+        xCoord = 0;
+    }
+    if (key == 'd' || key == 'D') {
+      if(xCoord + 25 < imageWidth)
+        xCoord += 25;
+      else
+        xCoord = imageWidth-1;
+    }
+    if (key == 'w' || key == 'W') {
+      if(yCoord - 25 > 0)
+        yCoord -= 25;
+      else
+        yCoord = 0;
+    }
+    if (key == 's' || key == 'S') {
+      if(yCoord + 25 < imageHeight)
+        yCoord += 25;
+      else
+        yCoord = imageHeight-1;
+    }
+    println("xCoord: " + xCoord);
+    println("yCoord: " + yCoord);
+  }
 
   
   //scale up the image, so both videos have the same size (resize didnt work for a reason to enlarge the image)
@@ -46,13 +78,18 @@ void draw(){
   
   chromaKey(movie2);
   
+  //FADE
+  //fade(movie1Upscale);
+  
+  //SPECIAL
+  //special(movie1Upscale, movie2);
+  
   image(movie1Upscale,0,0);
   //image(movie2,0,0);
   
-  //make a transition after 2 seconds
+  //make a TRANSITION after 2 seconds
   if((int)movie1.time() >= 2){
     //wipe(movie1Upscale, movie2);
-    fade(movie1Upscale, movie2);
     //dissolve(movie1Upscale, movie2);
   }
   
@@ -69,7 +106,7 @@ void wipe(PImage movie1, PImage movie2){
 
 void fade(PImage movie1){ 
   image(movie1,0,0);
-  tint(255,255 - currentFadeTransition);
+  tint(255,0 + currentFadeTransition);
  
   if(currentFadeTransition < 255)
     currentFadeTransition += speedFadeTransition; 
@@ -83,6 +120,18 @@ void dissolve(PImage movie1, PImage movie2){
   tint(255, 255 - currentDissolveTransition);
   
   currentDissolveTransition += speedFadeTransition; 
+}
+
+void special(PImage movie1, PImage movie2){
+  
+  loadPixels();  
+  for (int y = 0; y < yCoord; y++) {
+    for(int x = 0; x < xCoord; x++){
+      int aux = x + y * imageWidth;
+      movie1.pixels[aux] = movie2.pixels[aux];
+    }
+  }
+  updatePixels();
 }
 
 void chromaKey(PImage m){
